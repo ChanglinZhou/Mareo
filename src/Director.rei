@@ -7,3 +7,5 @@ let keydown: Dom.keyboardEvent => bool;
 
 /* Keyup event handler function */
 let keyup: Dom.keyboardEvent => bool;
+
+let setup_mainloop: (unit => unit) => unit;

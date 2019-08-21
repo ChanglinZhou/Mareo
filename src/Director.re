@@ -14,6 +14,8 @@ type keys = {
   mutable up: bool,
   mutable down: bool,
   mutable bbox: int,
+  mutable game_end: bool,
+  mutable loop: unit => unit
 };
 
 /*st represents the state of the game. It includes a background sprite (e.g.,
@@ -34,6 +36,7 @@ type st = {
   mutable game_over: bool,
 };
 
+let nop_loop() = ()
 /*pressed_keys instantiates the keys.*/
 let pressed_keys = {
   left: false,
@@ -41,7 +44,12 @@ let pressed_keys = {
   up: false,
   down: false,
   bbox: 0,
+  game_end: false,
+  loop: nop_loop,
 };
+
+let setup_mainloop(loop: unit => unit) =
+  pressed_keys.loop = loop
 
 let collid_objs = ref([]); /* List of next iteration collidable objects */
 
@@ -267,6 +275,7 @@ let process_collision =
         (None, None);
       }
     | Panel =>
+      pressed_keys.game_end = true;
       Draw.game_win(state.ctx);
       (None, None);
     | _ =>
@@ -276,6 +285,7 @@ let process_collision =
   | (Player(_, _, o1), Block(t, _, _), _) =>
     switch (t) {
     | Panel =>
+      pressed_keys.game_end = true;
       Draw.game_win(state.ctx);
       (None, None);
     | _ =>
@@ -513,6 +523,7 @@ let update_loop = (canvas, (player, objs), map_dim) => {
       let player = run_update_collid(state, player, objs);
       if (get_obj(player).kill == true) {
         Draw.game_loss(state.ctx);
+        pressed_keys.game_end = true;
       } else {
         let state = {
           ...state,
@@ -567,6 +578,12 @@ let keyup = evt => {
     | 65 => pressed_keys.left = false
     | 40
     | 83 => pressed_keys.down = false
+    | 82 | 114 => {
+      if (pressed_keys.game_end) {
+        pressed_keys.loop();
+        pressed_keys.game_end = false;
+      }
+    }
     | _ => ()
     };
   true;

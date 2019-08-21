@@ -43,11 +43,14 @@ let load = _ => {
       true,
     );
   let () = Pg.init();
-  Director.update_loop(
-    canvas,
-    Pg.generate(level_width, level_height, context),
-    (level_width, level_height),
-  );
+  let mainloop() = 
+    Director.update_loop(
+      canvas,
+      Pg.generate(level_width, level_height, context),
+      (level_width, level_height),
+    );
+  Director.setup_mainloop(mainloop)
+  mainloop()
 };
 
 let inc_counter = _ => {
