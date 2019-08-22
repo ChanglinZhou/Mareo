@@ -522,8 +522,8 @@ let update_loop = (canvas, (player, objs), map_dim) => {
       Draw.draw_bgd(state.bgd, float_of_int(vpos_x_int mod bgd_width));
       let player = run_update_collid(state, player, objs);
       if (get_obj(player).kill == true) {
-        Draw.game_loss(state.ctx);
         pressed_keys.game_end = true;
+        Draw.game_loss(state.ctx);
       } else {
         let state = {
           ...state,

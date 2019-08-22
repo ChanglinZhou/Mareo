@@ -3162,8 +3162,8 @@ function update_loop(canvas, param, map_dim) {
       draw_bgd(state[/* bgd */0], mod_(vpos_x_int, bgd_width));
       var player$1 = run_update_collid(state, player, objs);
       if (get_obj(player$1)[/* kill */8] === true) {
-        game_loss(state[/* ctx */1]);
         pressed_keys[/* game_end */5] = true;
+        game_loss(state[/* ctx */1]);
         return /* () */0;
       } else {
         var state$1 = /* record */[
